@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>By What Authority — Research Foundations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --ink:      #16140f;
+    --ink-2:    #1f1c15;
+    --paper:    #e6ddc2;
+    --paper-2:  #d9cda6;
+    --cream:    #f1e9d4;
+    --seal:     #b23a24;
+    --seal-dim: #7a2a1b;
+    --data:     #5f8b82;
+    --data-dim: #3d5b55;
+    --text:     #e9e2cf;
+    --text-dim: #948d78;
+    --rule:     #3a362b;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    line-height: 1.5;
+  }
+  ::selection{ background: var(--seal); color: var(--cream); }
+
+  a{ color:inherit; text-decoration:none; }
+
+  /* ---------- layout shell ---------- */
+  #shell{ display:flex; min-height:100vh; }
+
+  nav#toc{
+    position: sticky; top:0; height:100vh;
+    width: 230px; flex-shrink:0;
+    padding: 40px 0 40px 40px;
+    border-right: 1px solid var(--rule);
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  nav#toc .brand{
+    font-family:'Noto Serif SC', serif;
+    font-weight:700;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    margin-bottom: 34px;
+    padding-right: 24px;
+    line-height:1.4;
+  }
+  nav#toc .brand .zh{ color: var(--seal); font-size:13px; display:block; margin-top:4px; font-weight:400; }
+
+  nav#toc ol{ list-style:none; }
+  nav#toc ol li{ margin-bottom: 3px; }
+  nav#toc ol li a{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+    padding: 6px 24px 6px 0;
+    border-left: 2px solid transparent;
+    padding-left: 12px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  nav#toc ol li a:hover, nav#toc ol li a.active{
+    color: var(--cream);
+    border-left-color: var(--seal);
+  }
+  nav#toc .foot{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.03em;
+    padding-right: 24px;
+    line-height:1.6;
+  }
+
+  main{ flex:1; min-width:0; }
+
+  section{
+    padding: 120px 80px;
+    max-width: 980px;
+    border-bottom: 1px solid var(--rule);
+    position:relative;
+  }
+  section:last-of-type{ border-bottom:none; }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display:flex; align-items:center; gap:12px;
+    margin-bottom: 22px;
+  }
+  h1,h2,h3{ font-family:'Noto Serif SC', serif; font-weight:600; color:var(--cream); }
+  h2{ font-size: 34px; margin-bottom: 28px; letter-spacing:0.01em; max-width:14ch; }
+  .lede{ font-size: 20px; color: var(--text); max-width: 62ch; font-weight:400; }
+  .lede + .lede{ margin-top:14px; }
+
+  /* seal stamp */
+  .seal{
+    width: 46px; height:46px;
+    border: 2px solid currentColor;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Noto Serif SC', serif;
+    font-weight:700; font-size:22px;
+    flex-shrink:0;
+    transform: rotate(-2deg);
+  }
+  .seal.zhougong{ color: var(--seal); }
+  .seal.freud{ color: var(--paper-2); }
+  .seal.algo{ color: var(--data); }
+
+  /* ---------- hero ---------- */
+  #hero{
+    padding: 0 80px;
+    min-height: 100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    border-bottom: 1px solid var(--rule);
+  }
+  #hero .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.15em; text-transform:uppercase;
+    color: var(--seal); margin-bottom:26px;
+  }
+  #hero h1{
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+  }
+  #hero .sub{
+    margin-top: 28px;
+    font-size: 21px;
+    color: var(--text-dim);
+    max-width: 46ch;
+  }
+  #hero .authors{
+    margin-top: 60px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color: var(--text-dim);
+    letter-spacing:0.04em;
+  }
+
+  /* keywords */
+  .kw-row{ display:flex; flex-wrap:wrap; gap:12px; margin-top: 6px; }
+  .kw{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 10px 18px;
+    border: 1px solid var(--rule);
+    color: var(--paper-2);
+    letter-spacing:0.02em;
+  }
+
+  /* intersecting fields */
+  .field-cloud{ display:flex; flex-wrap:wrap; gap: 14px 34px; margin-top: 10px; }
+  .field-cloud span{
+    font-size: 17px;
+    color: var(--text);
+    position:relative;
+    padding-left:18px;
+  }
+  .field-cloud span::before{
+    content:''; position:absolute; left:0; top:10px;
+    width:8px; height:8px; border-radius:50%;
+    background: var(--seal);
+  }
+
+  /* lineage timeline */
+  .lineage{ display:flex; gap: 0; margin-top: 40px; }
+  .lineage .col{
+    flex:1; padding: 26px 24px; position:relative;
+  }
+  .lineage .col + .col{ border-left: 1px solid var(--rule); }
+  .lineage .col .era{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color: var(--text-dim); margin: 14px 0 10px 0;
+  }
+  .lineage .col h3{ font-size:19px; margin-bottom:10px; }
+  .lineage .col p{ font-size: 14.5px; color: var(--text-dim); line-height:1.6; }
+  .lineage .col.zhougong h3{ color: var(--seal); }
+  .lineage .col.algo h3{ color: var(--data); }
+
+  /* community */
+  .refs{ margin-top: 28px; display:flex; flex-direction:column; gap:20px; }
+  .ref{ display:flex; gap:20px; align-items:baseline; }
+  .ref .who{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--seal); width:170px; flex-shrink:0; letter-spacing:0.02em; }
+  .ref .what{ font-size:15.5px; color:var(--text); }
+
+  /* methods pipeline */
+  .pipeline{ display:flex; align-items:stretch; gap:0; margin-top:34px; flex-wrap:wrap; }
+  .pipeline .step{
+    flex:1; min-width:180px; padding: 22px 20px; border:1px solid var(--rule);
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .pipeline .step + .step{ border-left:none; }
+  .pipeline .step .n{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--data); }
+  .pipeline .step p{ font-size:14px; color:var(--text-dim); }
+
+  /* experiments grid */
+  .exp-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:20px; margin-top:36px; }
+  .exp-card{
+    aspect-ratio: 4/3;
+    border: 1px dashed var(--rule);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: 20px; gap:10px;
+    color: var(--text-dim);
+  }
+  .exp-card .plus{ font-size:22px; color:var(--rule); }
+  .exp-card .cap{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.03em; max-width:28ch; }
+
+  /* visual representation */
+  .swatch-row{ display:flex; gap:14px; margin: 30px 0 20px 0; }
+  .swatch{ width:70px; height:70px; border:1px solid var(--rule); }
+
+  /* rhetorical argument */
+  .argument{
+    font-family:'Noto Serif SC', serif;
+    font-size: 26px;
+    line-height:1.5;
+    color: var(--cream);
+    max-width: 20ch;
+    font-weight:600;
+    margin-top: 10px;
+  }
+
+  /* challenge list */
+  .challenge-list{ margin-top:28px; display:flex; flex-direction:column; gap:18px; }
+  .challenge-list .item{ display:flex; gap:18px; }
+  .challenge-list .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--seal); width:90px; flex-shrink:0; padding-top:2px; }
+  .challenge-list .txt{ font-size:15.5px; color:var(--text); max-width:56ch; }
+
+  /* proposals */
+  .proposal-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+  .proposal-card{ border:1px solid var(--rule); padding: 28px; }
+  .proposal-card .k{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--data); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:14px; }
+  .proposal-card h3{ font-size:20px; margin-bottom:12px; }
+  .proposal-card p{ font-size:14.5px; color:var(--text-dim); line-height:1.65; }
+  .scroll-diagram{ margin-top:18px; height:120px; border:1px dashed var(--rule); display:flex; }
+  .scroll-diagram div{ flex:1; display:flex; align-items:flex-end; justify-content:center; padding-bottom:8px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-dim); }
+  .scroll-diagram div:nth-child(1){ background: linear-gradient(180deg, var(--paper) 0%, var(--ink) 100%); }
+  .scroll-diagram div:nth-child(2){ background: linear-gradient(180deg, var(--paper-2) 0%, var(--ink) 100%); }
+  .scroll-diagram div:nth-child(3){ background: linear-gradient(180deg, var(--data) 0%, var(--ink) 100%); }
+
+  @media (max-width: 900px){
+    #shell{ flex-direction:column; }
+    nav#toc{ position:relative; width:100%; height:auto; border-right:none; border-bottom:1px solid var(--rule); padding: 24px; }
+    section{ padding: 70px 24px; }
+    #hero{ padding: 0 24px; min-height:70vh; }
+    .lineage{ flex-direction:column; }
+    .lineage .col + .col{ border-left:none; border-top:1px solid var(--rule); }
+    .exp-grid{ grid-template-columns:1fr; }
+    .proposal-grid{ grid-template-columns:1fr; }
+    .pipeline .step + .step{ border-left:1px solid var(--rule); border-top:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="shell">
+
+  <nav id="toc">
+    <div>
+      <div class="brand">By What Authority
+        <span class="zh">誰有權解夢</span>
+      </div>
+      <ol>
+        <li><a href="#hero">Title</a></li>
+        <li><a href="#questions">Research Questions</a></li>
+        <li><a href="#keywords">Keywords</a></li>
+        <li><a href="#fields">Intersecting Fields</a></li>
+        <li><a href="#lineage">Historical Lineage</a></li>
+        <li><a href="#community">Community of Practice</a></li>
+        <li><a href="#technology">Situated Technology</a></li>
+        <li><a href="#methods">Methods</a></li>
+        <li><a href="#experiments">Experiments</a></li>
+        <li><a href="#visual">Visual Representation</a></li>
+        <li><a href="#argument">Rhetorical Argument</a></li>
+        <li><a href="#capstone">Toward a Capstone</a></li>
+        <li><a href="#challenge">The Challenge</a></li>
+        <li><a href="#exhibition">Exhibition Proposals</a></li>
+      </ol>
+    </div>
+    <div class="foot">
+      SUMMER COLLOQUIUM<br>
+      RESEARCH FOUNDATIONS + OUTLINE<br>
+      DRAFT 01 — JUL 20
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO / TITLE -->
+    <section id="hero">
+      <div class="kicker">Research Foundations — First Draft</div>
+      <h1>By What<br>Authority</h1>
+      <div class="sub">A genealogy of dream interpretation — from the shared text, to the analyst, to the classifier.</div>
+      <div class="authors">M.S. COMPUTATIONAL DESIGN PRACTICES · GSAPP</div>
+    </section>
+
+    <!-- RESEARCH QUESTIONS -->
+    <section id="questions">
+      <div class="eyebrow"><span class="seal zhougong">?</span>Research Questions</div>
+      <h2>Who gets to say<br>what a dream means?</h2>
+      <div class="lede">When a classifier turns someone else's dream into a number, whose definition of "anxious" or "calm" is doing the counting — and where did that definition come from?</div>
+      <div class="lede">This project treats dream interpretation not as a puzzle to solve, but as a site where interpretive power has changed hands, again and again, without anyone noticing the handoff.</div>
+    </section>
+
+    <!-- KEYWORDS -->
+    <section id="keywords">
+      <div class="eyebrow">Keywords</div>
+      <h2>Five terms</h2>
+      <div class="kw-row">
+        <div class="kw">Interpretive Authority</div>
+        <div class="kw">Algorithmic Divination</div>
+        <div class="kw">Affective Quantification</div>
+        <div class="kw">Epistemic Violence</div>
+        <div class="kw">Historical Lineage</div>
+      </div>
+    </section>
+
+    <!-- INTERSECTING FIELDS -->
+    <section id="fields">
+      <div class="eyebrow">Intersecting Fields</div>
+      <h2>Standing at the overlap</h2>
+      <div class="field-cloud">
+        <span>Critical Data Studies</span>
+        <span>Computational Linguistics</span>
+        <span>History of Psychoanalysis</span>
+        <span>Abstract Painting</span>
+        <span>Platform Studies</span>
+      </div>
+    </section>
+
+    <!-- HISTORICAL LINEAGE -->
+    <section id="lineage">
+      <div class="eyebrow"><span class="seal zhougong">公</span>Historical Lineage</div>
+      <h2>Three eras of the right to interpret</h2>
+      <div class="lede">Every era claims its method is neutral. Every era is wrong about that in a different way.</div>
+      <div class="lineage">
+        <div class="col zhougong">
+          <div class="era">I — Shared Text</div>
+          <h3>周公解梦<br>Zhougong's Book of Dreams</h3>
+          <p>Authority lives in a public manuscript. Anyone can consult it, anyone can argue with it. Democratic — but only within one cultural frame.</p>
+        </div>
+        <div class="col freud">
+          <div class="era">II — Professional Individual</div>
+          <h3>The Psychoanalyst</h3>
+          <p>Authority is licensed to a trained person. The dreamer depends on the analyst to know — but at least the two of them are in the room, talking.</p>
+        </div>
+        <div class="col algo">
+          <div class="era">III — This Project</div>
+          <h3>Classifier + Topic Model + Artist</h3>
+          <p>Authority disperses into an opaque stack: a sentiment score, an LDA topic, a brushstroke chosen by the artist. No one to consult. No one to argue with.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMUNITY OF PRACTICE -->
+    <section id="community">
+      <div class="eyebrow">Community of Practice</div>
+      <h2>Who this argues with</h2>
+      <div class="refs">
+        <div class="ref"><div class="who">D'Ignazio &amp; Klein</div><div class="what">Data Feminism — data doesn't speak for itself; counting is never neutral.</div></div>
+        <div class="ref"><div class="who">Kate Crawford</div><div class="what">Atlas of AI — affective computing still runs on Ekman's discredited theory of universal emotion.</div></div>
+        <div class="ref"><div class="who">Lisa Nakamura</div><div class="what">On QueerOS — critiqued for removing a subject's authority over their own experience; the same structure recurs here.</div></div>
+      </div>
+      <div class="lede" style="margin-top:32px;">This project doesn't stand outside that critique. It is an instance of the thing being critiqued — that's the position, not an escape from it.</div>
+    </section>
+
+    <!-- SITUATED TECHNOLOGY -->
+    <section id="technology">
+      <div class="eyebrow"><span class="seal algo">析</span>Situated Technology</div>
+      <h2>Built on a theory<br>psychology already left behind</h2>
+      <div class="lede">Emotion classifiers still assume a small set of universal, legible emotions — a theory (Paul Ekman's) that has lost much of its scientific standing but never left the industry's tools.</div>
+      <div class="lede">The source material — dream-posts voluntarily published on Weibo — is also situated: a semi-confessional public genre with its own conventions of performance, not a transparent window into the unconscious.</div>
+    </section>
+
+    <!-- METHODS -->
+    <section id="methods">
+      <div class="eyebrow">Methods</div>
+      <h2>The pipeline</h2>
+      <div class="pipeline">
+        <div class="step"><div class="n">01</div><p>Public Weibo dream-posts, voluntarily published</p></div>
+        <div class="step"><div class="n">02</div><p>Sentiment polarity scoring + LDA topic modeling</p></div>
+        <div class="step"><div class="n">03</div><p>Generative image synthesis, blending several abstract painters' brushwork</p></div>
+        <div class="step"><div class="n">04</div><p>Output: a series of generated "dream portraits"</p></div>
+      </div>
+      <div class="lede" style="margin-top:28px;">Mixed qualitative and quantitative. Likely exhibition form: a looping generative print series, alongside the diagram that exposes how each image was decided.</div>
+    </section>
+
+    <!-- COMPUTATIONAL DESIGN EXPERIMENTS -->
+    <section id="experiments">
+      <div class="eyebrow">Computational Design Experiments</div>
+      <h2>Work in progress</h2>
+      <div class="exp-grid">
+        <div class="exp-card"><div class="plus">+</div><div class="cap">INSERT — sentiment distribution, first scrape</div></div>
+        <div class="exp-card"><div class="plus">+</div><div class="cap">INSERT — LDA topic clusters, first pass</div></div>
+        <div class="exp-card"><div class="plus">+</div><div class="cap">INSERT — first brushwork-blend generation test</div></div>
+        <div class="exp-card"><div class="plus">+</div><div class="cap">INSERT — pipeline diagram, v1</div></div>
+      </div>
+    </section>
+
+    <!-- VISUAL REPRESENTATION -->
+    <section id="visual">
+      <div class="eyebrow">Visual Representation</div>
+      <h2>Borrowing a myth<br>to question it</h2>
+      <div class="lede">Abstract Expressionism claimed the brushstroke reveals the artist's true inner state. This project borrows that visual language and turns it back on itself: what happens when the "artist" is an algorithm making the same claim about someone else's unconscious?</div>
+      <div class="swatch-row">
+        <div class="swatch" style="background:var(--paper)"></div>
+        <div class="swatch" style="background:var(--seal)"></div>
+        <div class="swatch" style="background:var(--data)"></div>
+        <div class="swatch" style="background:var(--ink-2)"></div>
+      </div>
+      <div class="lede">Paper tones for the shared text, cinnabar for the seal of authority, cold data-teal for the classifier — the palette itself tracks the genealogy.</div>
+    </section>
+
+    <!-- RHETORICAL ARGUMENT -->
+    <section id="argument">
+      <div class="eyebrow"><span class="seal algo">算</span>Rhetorical Argument</div>
+      <h2>The claim</h2>
+      <div class="argument">This project does not reveal what your dream means. It stages who gets to decide — and admits it is the newest, least accountable name on that list.</div>
+    </section>
+
+    <!-- CAPSTONE GESTURE -->
+    <section id="capstone">
+      <div class="eyebrow">Toward a Capstone</div>
+      <h2>A tentative direction</h2>
+      <div class="lede">One possibility: an interactive "anti-oracle." A viewer offers a dream; the classifier, topic model, and generator run live — but the interface deliberately shows the ambiguity and the road not taken at every step, rather than delivering one confident image.</div>
+      <div class="lede">Not a solution. A gesture toward where the argument could go next.</div>
+    </section>
+
+    <!-- CHALLENGE -->
+    <section id="challenge">
+      <div class="eyebrow">The Challenge</div>
+      <h2>Where this is still shaky</h2>
+      <div class="challenge-list">
+        <div class="item"><div class="tag">TECHNICAL</div><div class="txt">Brushwork-blend generation needs real development beyond simple style transfer.</div></div>
+        <div class="item"><div class="tag">ETHICAL</div><div class="txt">Sourcing dream-posts without re-performing the extraction the project critiques.</div></div>
+        <div class="item"><div class="tag">RISK</div><div class="txt">The work could become beautiful before it becomes critical — seduction outrunning the argument.</div></div>
+      </div>
+    </section>
+
+    <!-- EXHIBITION PROPOSALS -->
+    <section id="exhibition">
+      <div class="eyebrow">Exhibition Components — Proposals</div>
+      <h2>Drawing &amp; material gesture</h2>
+      <div class="proposal-grid">
+        <div class="proposal-card">
+          <div class="k">Printed Vertical Drawing</div>
+          <h3>A genealogy scroll</h3>
+          <p>A vertical hanging scroll — the format of the Zhougong manuscript itself — divided into three registers top to bottom, growing more pixelated and painterly as it descends, ending in one generated dream-portrait.</p>
+          <div class="scroll-diagram">
+            <div>I — TEXT</div>
+            <div>II — CASE NOTE</div>
+            <div>III — CLASSIFIER</div>
+          </div>
+        </div>
+        <div class="proposal-card">
+          <div class="k">Material-Spatial Gesture</div>
+          <h3>A knolled triptych</h3>
+          <p>Three interpretive tools laid out side by side: a facsimile fragment of the Zhougong text, a typewritten psychoanalytic case-note replica, and a printed sentiment score-sheet — the last one partly obscured under frosted acrylic, deliberately hard to read.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const links = document.querySelectorAll('#toc a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const link = document.querySelector(`#toc a[href="#${e.target.id}"]`);
+        if(link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => s && io.observe(s));
+</script>
+
+</body>
+</html>
